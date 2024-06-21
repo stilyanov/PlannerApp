@@ -3,6 +3,7 @@ package com.plannerapp.model.entity.dto;
 import com.plannerapp.model.entity.PriorityEnum;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
@@ -16,7 +17,7 @@ public class AddTaskDTO {
 
     @NotNull(message = "Due Date must be in future!")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @PastOrPresent(message = "Due Date must be in future!")
+    @Future(message = "Due Date must be in future!")
     private LocalDate dueDate;
 
     @NotNull(message = "You must select a priority!")
