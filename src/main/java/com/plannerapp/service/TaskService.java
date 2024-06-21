@@ -54,7 +54,7 @@ public class TaskService {
 
     public List<TasksInfoDTO> findAllTasks() {
         return this.taskRepository
-                .findAll()
+                .findAllByUserIdNull()
                 .stream()
                 .map(TasksInfoDTO::new)
                 .collect(Collectors.toList());
