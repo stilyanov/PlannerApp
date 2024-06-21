@@ -5,12 +5,15 @@ import com.plannerapp.model.entity.Priority;
 import com.plannerapp.model.entity.Task;
 import com.plannerapp.model.entity.User;
 import com.plannerapp.model.entity.dto.AddTaskDTO;
+import com.plannerapp.model.entity.dto.AllAvailableTasksDTO;
 import com.plannerapp.repo.PriorityRepository;
 import com.plannerapp.repo.TaskRepository;
 import com.plannerapp.repo.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -53,5 +56,13 @@ public class TaskService {
         this.taskRepository.save(task);
 
         return true;
+    }
+
+    public List<AllAvailableTasksDTO> findAllTasks() {
+        return this.taskRepository
+                .findAll()
+                .stream()
+                .map(AllAvailableTasksDTO::new)
+                .collect(Collectors.toList());
     }
 }
