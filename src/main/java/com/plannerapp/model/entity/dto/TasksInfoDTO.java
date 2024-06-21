@@ -5,7 +5,7 @@ import com.plannerapp.model.entity.Task;
 
 import java.time.LocalDate;
 
-public class AllAvailableTasksDTO {
+public class TasksInfoDTO {
 
     private long id;
 
@@ -15,7 +15,7 @@ public class AllAvailableTasksDTO {
 
     private String description;
 
-    public AllAvailableTasksDTO(Task task) {
+    public TasksInfoDTO(Task task) {
         this.id = task.getId();
         this.priority = task.getPriority();
         this.dueDate = task.getDueDate();

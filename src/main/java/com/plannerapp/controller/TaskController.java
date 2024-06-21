@@ -1,14 +1,12 @@
 package com.plannerapp.controller;
 
 import com.plannerapp.config.UserSession;
+import com.plannerapp.model.entity.PriorityEnum;
 import com.plannerapp.model.entity.dto.AddTaskDTO;
 import com.plannerapp.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -28,6 +26,11 @@ public class TaskController {
     @ModelAttribute("taskData")
     public AddTaskDTO taskDTO() {
         return new AddTaskDTO();
+    }
+
+    @ModelAttribute("priorities")
+    public PriorityEnum[] priorities() {
+        return PriorityEnum.values();
     }
 
     @GetMapping("/add")
@@ -63,7 +66,28 @@ public class TaskController {
         }
 
         return "redirect:/home";
+    }
 
+    @GetMapping("/assign/{taskId}")
+    public String assignTaskToUser(@PathVariable Long taskId) {
+
+        this.taskService.assignTaskToUser(taskId);
+
+        return "redirect:/home";
+    }
+
+    @GetMapping("/return/{taskId}")
+    public String returnTaskFromUser(@PathVariable Long taskId) {
+        this.taskService.returnTaskFromUser(taskId);
+
+        return "redirect:/home";
+    }
+
+    @GetMapping("/delete/{taskId}")
+    public String deleteTask(@PathVariable Long taskId) {
+        this.taskService.deleteTask(taskId);
+
+        return "redirect:/home";
     }
 
 }

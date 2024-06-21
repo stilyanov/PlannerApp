@@ -5,7 +5,7 @@ import com.plannerapp.model.entity.Priority;
 import com.plannerapp.model.entity.Task;
 import com.plannerapp.model.entity.User;
 import com.plannerapp.model.entity.dto.AddTaskDTO;
-import com.plannerapp.model.entity.dto.AllAvailableTasksDTO;
+import com.plannerapp.model.entity.dto.TasksInfoDTO;
 import com.plannerapp.repo.PriorityRepository;
 import com.plannerapp.repo.TaskRepository;
 import com.plannerapp.repo.UserRepository;
@@ -36,11 +36,6 @@ public class TaskService {
             return false;
         }
 
-        Optional<User> user = this.userRepository.findById(userSession.id());
-        if (user.isEmpty()) {
-            return false;
-        }
-
         Optional<Priority> priority = this.priorityRepository.findByName(taskDTO.getPriority());
 
         if (priority.isEmpty()) {
@@ -51,18 +46,47 @@ public class TaskService {
         task.setDescription(taskDTO.getDescription());
         task.setDueDate(taskDTO.getDueDate());
         task.setPriority(priority.get());
-        task.setUser(user.get());
 
         this.taskRepository.save(task);
 
         return true;
     }
 
-    public List<AllAvailableTasksDTO> findAllTasks() {
+    public List<TasksInfoDTO> findAllTasks() {
         return this.taskRepository
                 .findAll()
                 .stream()
-                .map(AllAvailableTasksDTO::new)
+                .map(TasksInfoDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<TasksInfoDTO> findUserTasks() {
+        return this.taskRepository
+                .findByUserId((userSession.id()))
+                .stream()
+                .map(TasksInfoDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public void assignTaskToUser(Long taskId) {
+        Task task = this.taskRepository.findById((taskId)).get();
+
+        Optional<User> username = this.userRepository.findByUsername(userSession.username());
+        task.setUser(username.get());
+
+        this.taskRepository.save(task);
+
+    }
+
+    public void returnTaskFromUser(Long taskId) {
+        Task task = this.taskRepository.findById(taskId).get();
+
+        task.setUser(null);
+
+        taskRepository.save(task);
+    }
+
+    public void deleteTask(Long taskId) {
+        this.taskRepository.deleteById(taskId);
     }
 }
