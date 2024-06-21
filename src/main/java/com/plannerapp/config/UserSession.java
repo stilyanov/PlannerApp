@@ -12,9 +12,9 @@ public class UserSession {
 
     private String username;
 
-    public void login(User user) {
-        this.userId = user.getId();
-        this.username = user.getUsername();
+    public void login(long id, String username) {
+        this.userId = id;
+        this.username = username;
     }
 
     public boolean isLoggedIn() {

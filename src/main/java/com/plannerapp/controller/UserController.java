@@ -66,4 +66,35 @@ public class UserController {
         return "redirect:/users/login";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        if (userSession.isLoggedIn()) {
+            return "redirect:/home";
+        }
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String doLogin(@Valid UserLoginDTO loginDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (userSession.isLoggedIn()) {
+            return "redirect:/home";
+        }
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("loginData", loginDTO);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.loginData", bindingResult);
+            return "redirect:/users/login";
+        }
+
+        boolean success = this.userService.login(loginDTO);
+        if (!success) {
+            redirectAttributes.addFlashAttribute("loginData", loginDTO);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.loginData", bindingResult);
+            redirectAttributes.addFlashAttribute("loginError", "Incorrect username or password");
+            return "redirect:/users/login";
+        }
+
+        return "redirect:/home";
+    }
+
 }
